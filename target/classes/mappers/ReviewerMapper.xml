@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tb.mapper.ReviewerMapper">
+  <resultMap id="BaseResultMap" type="com.tb.entity.Reviewer">
+    <id column="appkey" jdbcType="VARCHAR" property="appkey" />
+    <result column="userIDNumber" jdbcType="VARCHAR" property="userIDNumber" />
+    <result column="userRealName" jdbcType="VARCHAR" property="userRealName" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="xuanyan" jdbcType="VARCHAR" property="xuanyan" />
+    <result column="declaration" jdbcType="VARCHAR" property="declaration" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="tasksNumber" jdbcType="INTEGER" property="tasksNumber" />
+    <result column="reportTasks" jdbcType="INTEGER" property="reportTasks" />
+    <result column="reviewAddTasks" jdbcType="INTEGER" property="reviewAddTasks" />
+    <result column="reviewDeclareTasks" jdbcType="INTEGER" property="reviewDeclareTasks" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from reviewer
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tb.entity.Reviewer">
+    insert into reviewer (appkey, userIDNumber, userRealName, 
+      `desc`, xuanyan, declaration,
+      status, tasksNumber, reportTasks, 
+      reviewAddTasks, reviewDeclareTasks,votenum)
+    values (#{appkey,jdbcType=VARCHAR}, #{userIDNumber,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, 
+      #{desc,jdbcType=VARCHAR}, #{xuanyan,jdbcType=VARCHAR}, #{declaration,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{tasksNumber,jdbcType=INTEGER}, #{reportTasks,jdbcType=INTEGER}, 
+      #{reviewAddTasks,jdbcType=INTEGER}, #{reviewDeclareTasks,jdbcType=INTEGER},#{votenum})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tb.entity.Reviewer">
+    update reviewer
+    set userIDNumber = #{userIDNumber,jdbcType=VARCHAR},
+      userRealName = #{userRealName,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
+      xuanyan = #{xuanyan,jdbcType=VARCHAR},
+      declaration = #{declaration,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      tasksNumber = #{tasksNumber,jdbcType=INTEGER},
+      reportTasks = #{reportTasks,jdbcType=INTEGER},
+      reviewAddTasks = #{reviewAddTasks,jdbcType=INTEGER},
+      reviewDeclareTasks = #{reviewDeclareTasks,jdbcType=INTEGER},
+        votenum = #{votenum}
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select appkey, userIDNumber, userRealName, `desc`, xuanyan, declaration, status, tasksNumber,
+    reportTasks, reviewAddTasks, reviewDeclareTasks,votenum
+    from reviewer
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select appkey, userIDNumber, userRealName, `desc`, xuanyan, declaration, status, tasksNumber,
+    reportTasks, reviewAddTasks, reviewDeclareTasks,votenum
+    from reviewer
+  </select>
+
+
+  <update id="updateAddTask" parameterType="java.lang.String">
+    update reviewer set tasksNumber = ((select tn.tasksNumber from
+    (SELECT tasksNumber FROM reviewer WHERE appkey = #{appkey,jdbcType=VARCHAR}) tn)+1),
+    reviewAddTasks = ((select tn.reviewAddTasks from
+    (SELECT reviewAddTasks FROM reviewer WHERE appkey = #{appkey,jdbcType=VARCHAR}) tn)+1)
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateDeclareTask" parameterType="java.lang.String">
+    update reviewer set tasksNumber = ((select tn.tasksNumber from
+      (SELECT tasksNumber FROM reviewer WHERE appkey = #{appkey,jdbcType=VARCHAR}) tn)+1),
+                        reviewDeclareTasks = ((select tn.reviewDeclareTasks from
+                          (SELECT reviewDeclareTasks FROM reviewer WHERE appkey = #{appkey,jdbcType=VARCHAR}) tn)+1)
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateReviewByday" >
+    UPDATE reviewer r
+    SET r.status = 1
+    WHERE r.status = 0
+    ORDER BY  votenum DESC
+    LIMIT 21
+  </update>
+
+  <update id="updateReviewLastday" >
+    UPDATE reviewer r
+    SET r.status = 2
+    WHERE r.status = 1
+  </update>
+
+</mapper>

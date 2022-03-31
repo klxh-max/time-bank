@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tb.mapper.BankuserMapper">
+  <resultMap id="BaseResultMap" type="com.tb.entity.Bankuser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="appkey" jdbcType="VARCHAR" property="appkey" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="phoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="avatarUrl" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="userIDNumber" jdbcType="VARCHAR" property="userIDNumber" />
+    <result column="userRealName" jdbcType="VARCHAR" property="userRealName" />
+    <result column="userBirthday" jdbcType="DATE" property="userBirthday" />
+    <result column="userMoney" jdbcType="DOUBLE" property="userMoney" />
+    <result column="userWorkTime" jdbcType="DOUBLE" property="userWorkTime" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="projectIdOut" jdbcType="VARCHAR" property="projectIdOut" />
+    <result column="projectIdIn" jdbcType="VARCHAR" property="projectIdIn" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="projectNum" jdbcType="INTEGER" property="projectNum" />
+    <result column="ReviewerNum" jdbcType="INTEGER" property="reviewerNum" />
+    <result column="voteId" jdbcType="VARCHAR" property="voteId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from bankuser
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tb.entity.Bankuser">
+    insert into bankuser (id, appkey, username, 
+      phoneNumber, role, avatarUrl, 
+      userIDNumber, userRealName, userBirthday, 
+      userMoney, userWorkTime, password, 
+      projectIdOut, projectIdIn, sex, 
+      level, projectNum, ReviewerNum, 
+      voteId)
+    values (#{id,jdbcType=BIGINT}, #{appkey,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
+      #{userIDNumber,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, #{userBirthday,jdbcType=DATE}, 
+      #{userMoney,jdbcType=DOUBLE}, #{userWorkTime,jdbcType=DOUBLE}, #{password,jdbcType=VARCHAR}, 
+      #{projectIdOut,jdbcType=VARCHAR}, #{projectIdIn,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{level,jdbcType=INTEGER}, #{projectNum,jdbcType=INTEGER}, #{reviewerNum,jdbcType=INTEGER}, 
+      #{voteId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tb.entity.Bankuser">
+    update bankuser
+    set appkey = #{appkey,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      phoneNumber = #{phoneNumber,jdbcType=VARCHAR},
+      role = #{role,jdbcType=VARCHAR},
+      avatarUrl = #{avatarUrl,jdbcType=VARCHAR},
+      userIDNumber = #{userIDNumber,jdbcType=VARCHAR},
+      userRealName = #{userRealName,jdbcType=VARCHAR},
+      userBirthday = #{userBirthday,jdbcType=DATE},
+      userMoney = #{userMoney,jdbcType=DOUBLE},
+      userWorkTime = #{userWorkTime,jdbcType=DOUBLE},
+      password = #{password,jdbcType=VARCHAR},
+      projectIdOut = #{projectIdOut,jdbcType=VARCHAR},
+      projectIdIn = #{projectIdIn,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      projectNum = #{projectNum,jdbcType=INTEGER},
+      ReviewerNum = #{reviewerNum,jdbcType=INTEGER},
+      voteId = #{voteId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, appkey, username, phoneNumber, role, avatarUrl, userIDNumber, userRealName, 
+    userBirthday, userMoney, userWorkTime, password, projectIdOut, projectIdIn, sex, 
+    level, projectNum, ReviewerNum, voteId
+    from bankuser
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, appkey, username, phoneNumber, role, avatarUrl, userIDNumber, userRealName, 
+    userBirthday, userMoney, userWorkTime, password, projectIdOut, projectIdIn, sex, 
+    level, projectNum, ReviewerNum, voteId
+    from bankuser
+  </select>
+
+  <select id="selectByPhoneNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, appkey, username, phoneNumber, role, avatarUrl, userIDNumber, userRealName,
+           userBirthday, userMoney, userWorkTime, password, projectIdOut, projectIdIn, sex,
+           level, projectNum, ReviewerNum, voteId
+    from bankuser
+    where phoneNumber = #{phoneNumber,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByAppkey" parameterType="java.lang.String" resultType="java.lang.String">
+    select username from bankuser
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBankUserByAppkey" parameterType="java.lang.String" resultType="com.tb.entity.Bankuser">
+    select * from bankuser
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateMoneyByPrimaryKey" parameterType="map">
+    update bankuser
+    set userMoney = #{userMoney,jdbcType=DOUBLE}
+        where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateCurrency" parameterType="map">
+    update bankuser set userMoney = ((select bu.userMoney from
+      (SELECT userMoney FROM bankuser WHERE appkey = #{appkey,jdbcType=VARCHAR}) bu) + #{currency})
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateWorkTime" parameterType="map">
+    update bankuser set userWorkTime = ((select bu.userWorkTime from
+      (SELECT userWorkTime FROM bankuser WHERE appkey = #{appkey,jdbcType=VARCHAR}) bu) + #{time})
+    where appkey = #{appkey,jdbcType=VARCHAR}
+  </update>
+
+
+</mapper>

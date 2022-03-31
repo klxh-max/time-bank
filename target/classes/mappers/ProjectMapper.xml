@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tb.mapper.ProjectMapper">
+  <resultMap id="BaseResultMap" type="com.tb.entity.Project">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="projectId" jdbcType="VARCHAR" property="projectId" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="ownerName" jdbcType="VARCHAR" property="ownerName" />
+    <result column="ownerId" jdbcType="VARCHAR" property="ownerId" />
+    <result column="time" jdbcType="DOUBLE" property="time" />
+    <result column="currency" jdbcType="DOUBLE" property="currency" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="needPeople" jdbcType="INTEGER" property="needPeople" />
+    <result column="nowPeople" jdbcType="INTEGER" property="nowPeople" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="recipient" jdbcType="VARCHAR" property="recipient" />
+    <result column="remarkText" jdbcType="VARCHAR" property="remarkText" />
+    <result column="contactPersonName" jdbcType="VARCHAR" property="contactPersonName" />
+    <result column="contactPersonSex" jdbcType="VARCHAR" property="contactPersonSex" />
+    <result column="contactPersonPhone" jdbcType="VARCHAR" property="contactPersonPhone" />
+    <result column="remarkFlag" jdbcType="INTEGER" property="remarkFlag" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from project
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tb.entity.Project">
+    insert into project (id, projectId, pname, 
+      ownerName, ownerId, `time`,
+      currency, category, `state`,
+      createTime, startTime, endTime, 
+      address, needPeople, nowPeople, 
+      description, recipient, remarkText, 
+      contactPersonName, contactPersonSex, contactPersonPhone, remarkFlag
+      )
+    values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, 
+      #{ownerName,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, #{time,jdbcType=DOUBLE}, 
+      #{currency,jdbcType=DOUBLE}, #{category,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{address,jdbcType=VARCHAR}, #{needPeople,jdbcType=INTEGER}, #{nowPeople,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, #{remarkText,jdbcType=VARCHAR}, 
+      #{contactPersonName,jdbcType=VARCHAR}, #{contactPersonSex,jdbcType=VARCHAR}, #{contactPersonPhone,jdbcType=VARCHAR}
+      ,#{remarkFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tb.entity.Project">
+    update project
+    set projectId = #{projectId,jdbcType=VARCHAR},
+      pname = #{pname,jdbcType=VARCHAR},
+      ownerName = #{ownerName,jdbcType=VARCHAR},
+      ownerId = #{ownerId,jdbcType=VARCHAR},
+      `time` = #{time,jdbcType=DOUBLE},
+      currency = #{currency,jdbcType=DOUBLE},
+      category = #{category,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      needPeople = #{needPeople,jdbcType=INTEGER},
+      nowPeople = #{nowPeople,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      recipient = #{recipient,jdbcType=VARCHAR},
+      remarkText = #{remarkText,jdbcType=VARCHAR},
+      contactPersonName = #{contactPersonName,jdbcType=VARCHAR},
+      contactPersonSex = #{contactPersonSex,jdbcType=VARCHAR},
+      contactPersonPhone = #{contactPersonPhone,jdbcType=VARCHAR},
+      remarkFlag = #{remarkFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, projectId, pname, ownerName, ownerId, `time`, currency, category, `state`,
+    createTime, startTime, endTime, address, needPeople, nowPeople, description, recipient, 
+    remarkText, contactPersonName, contactPersonSex, contactPersonPhone, remarkFlag
+    from project
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, projectId, pname, ownerName, ownerId, `time`, currency, category, `state`,
+    createTime, startTime, endTime, address, needPeople, nowPeople, description, recipient, 
+    remarkText, contactPersonName, contactPersonSex, contactPersonPhone, remarkFlag
+    from project
+  </select>
+
+  <select id="selectEndTime" parameterType="java.lang.String" resultType="java.util.Date">
+    select endTime from project where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateState" parameterType="map">
+    update project set `state` = #{state,jdbcType=DATE}
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByProjectId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, projectId, pname, ownerName, ownerId, `time`, currency, category, `state`,
+           createTime, startTime, endTime, address, needPeople, nowPeople, description, recipient,
+           remarkText, contactPersonName, contactPersonSex, contactPersonPhone, remarkFlag
+    from project
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateFlag" parameterType="java.lang.String">
+    update project set remarkFlag = 1
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectFlag" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select flag from projecttoday where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryProjectByProjectId" resultType="com.tb.entity.Project">
+    select * from project
+    where projectId=#{projectId}
+  </select>
+  <select id="queryListByOwnerId" resultType="com.tb.entity.Project">
+    select * from project
+    where ownerId = #{ownerId}
+  </select>
+
+  <update id="updateProjectStatus" >
+    update project set
+  </update>
+
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tb.mapper.ProjecttodayMapper">
+  <resultMap id="BaseResultMap" type="com.tb.entity.Projecttoday">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="projectId" jdbcType="VARCHAR" property="projectId" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="contactPersonName" jdbcType="VARCHAR" property="contactPersonName" />
+    <result column="ownerId" jdbcType="VARCHAR" property="ownerId" />
+    <result column="time" jdbcType="DOUBLE" property="time" />
+    <result column="currency" jdbcType="DOUBLE" property="currency" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="needPeople" jdbcType="INTEGER" property="needPeople" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="projectAgree" jdbcType="INTEGER" property="projectAgree" />
+    <result column="projectDisagree" jdbcType="INTEGER" property="projectDisagree" />
+    <result column="contactPersonSex" jdbcType="VARCHAR" property="contactPersonSex" />
+    <result column="contactPersonPhone" jdbcType="VARCHAR" property="contactPersonPhone" />
+    <result column="reviewerlist" jdbcType="VARCHAR" property="reviewerlist" />
+    <result column="flag" jdbcType="INTEGER" property="flag" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from projecttoday
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tb.entity.Projecttoday">
+    insert into projecttoday (id, projectId, pname, 
+      contactPersonName, ownerId, time, 
+      currency, category, startTime, 
+      endTime, address, needPeople, 
+      description, projectAgree, projectDisagree, 
+      contactPersonSex, contactPersonPhone, reviewerlist,flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, 
+      #{contactPersonName,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, #{time,jdbcType=DOUBLE}, 
+      #{currency,jdbcType=DOUBLE}, #{category,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, #{needPeople,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{projectAgree,jdbcType=INTEGER}, #{projectDisagree,jdbcType=INTEGER}, 
+      #{contactPersonSex,jdbcType=VARCHAR}, #{contactPersonPhone,jdbcType=VARCHAR}, #{reviewerlist,jdbcType=VARCHAR}, #{flag,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tb.entity.Projecttoday">
+    update projecttoday
+    set projectId = #{projectId,jdbcType=VARCHAR},
+      pname = #{pname,jdbcType=VARCHAR},
+      contactPersonName = #{contactPersonName,jdbcType=VARCHAR},
+      ownerId = #{ownerId,jdbcType=VARCHAR},
+      `time` = #{time,jdbcType=DOUBLE},
+      currency = #{currency,jdbcType=DOUBLE},
+      category = #{category,jdbcType=VARCHAR},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      needPeople = #{needPeople,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      projectAgree = #{projectAgree,jdbcType=INTEGER},
+      projectDisagree = #{projectDisagree,jdbcType=INTEGER},
+      contactPersonSex = #{contactPersonSex,jdbcType=VARCHAR},
+      contactPersonPhone = #{contactPersonPhone,jdbcType=VARCHAR},
+      reviewerlist = #{reviewerlist,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, projectId, pname, contactPersonName, ownerId, `time`, currency, category,
+    startTime, endTime, address, needPeople, description, projectAgree, projectDisagree, 
+    contactPersonSex, contactPersonPhone, reviewerlist,flag
+    from projecttoday
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, projectId, pname, contactPersonName, ownerId, `time`, currency, category,
+    startTime, endTime, address, needPeople, description, projectAgree, projectDisagree, 
+    contactPersonSex, contactPersonPhone, reviewerlist,flag
+    from projecttoday
+  </select>
+
+  <select id="selectByPojectId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, projectId, pname, contactPersonName, ownerId, `time`, currency, category,
+      startTime, endTime, address, needPeople, description, projectAgree,
+      projectDisagree, contactPersonSex, contactPersonPhone,reviewerlist,flag
+    from projecttoday
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateAgree" parameterType="java.lang.String">
+    update projecttoday set projectAgree = ((select pa.projectAgree from
+      (SELECT projectAgree FROM projecttoday WHERE projectId = #{projectId,jdbcType=VARCHAR}) pa)+1)
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateDisagree" parameterType="java.lang.String">
+    update projecttoday set projectDisagree = ((select pa.projectDisagree from
+      (SELECT projectDisagree FROM projecttoday WHERE projectId = #{projectId,jdbcType=VARCHAR}) pa)+1)
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateStatus" parameterType="java.lang.String">
+    update projecttoday set reviewerlist = #{reviewerlist,jdbcType=VARCHAR}
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateFlag" parameterType="java.lang.String">
+    update projecttoday set flag = 1
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectReviewerlist" parameterType="java.lang.String" resultType="java.lang.String">
+    select reviewerlist from projecttoday where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectFlag" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select flag from projecttoday where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAgree" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select projectAgree from projecttoday where projectId = #{projectId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateByPojectId" parameterType="com.tb.entity.Projecttoday">
+    update projecttoday
+    set pname = #{pname,jdbcType=VARCHAR},
+        contactPersonName = #{contactPersonName,jdbcType=VARCHAR},
+        ownerId = #{ownerId,jdbcType=VARCHAR},
+        `time` = #{time,jdbcType=DOUBLE},
+        currency = #{currency,jdbcType=DOUBLE},
+        category = #{category,jdbcType=VARCHAR},
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+        address = #{address,jdbcType=VARCHAR},
+        needPeople = #{needPeople,jdbcType=INTEGER},
+        description = #{description,jdbcType=VARCHAR},
+        projectAgree = #{projectAgree,jdbcType=INTEGER},
+        projectDisagree = #{projectDisagree,jdbcType=INTEGER},
+        contactPersonSex = #{contactPersonSex,jdbcType=VARCHAR},
+        contactPersonPhone = #{contactPersonPhone,jdbcType=VARCHAR},
+        reviewerlist = #{reviewerlist,jdbcType=VARCHAR},
+        flag = #{flag,jdbcType=INTEGER}
+    where projectId = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectListByOwnerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, projectId, pname, contactPersonName, ownerId, `time`, currency, category,
+      startTime, endTime, address, needPeople, description, projectAgree,
+      projectDisagree, contactPersonSex, contactPersonPhone,reviewerlist,flag
+    from projecttoday
+    where ownerId = #{ownerId}
+  </select>
+</mapper>
